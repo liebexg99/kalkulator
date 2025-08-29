@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YOUR PC GOT TROJAN!</title>
+  <meta name="description" content="Scary prank page with flashing warnings (no audio)." />
+  <style>
+    :root {
+      --bg1: #f0f0f5; /* Light gray background to hide transparency */
+      --bg2: #e0e0eb;
+      --pink-pony: #ff69b4; /* Pink pony color for friendly border */
+      --neon: #39ff14;
+      --violet: #b900ff;
+      --white: #f5f5f5;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg1); /* Solid background to cover transparency */
+      color: var(--white);
+      overflow: hidden;
+      cursor: crosshair;
+    }
+    .scan-overlay { position: fixed; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: .07;
+      background-image: linear-gradient(transparent 31px, rgba(255,255,255,.5) 32px), linear-gradient(90deg, transparent 31px, rgba(255,255,255,.5) 32px);
+      background-size: 32px 32px, 32px 32px;
+      animation: scan 6s linear infinite; }
+    @keyframes scan { 0% { background-position: 0 0, 0 0 } 100% { background-position: 0 32px, 32px 0 } }
+    canvas#matrix { position: fixed; inset: 0; z-index: 0; filter: contrast(140%) saturate(120%); }
+    .center { position: fixed; inset: 0; display: grid; place-items: center; z-index: 4; text-align: center; }
+    .headline { font-size: clamp(34px, 9vw, 160px); letter-spacing: .04em; font-weight: 900; color: #ff2b2b;
+      text-shadow: 0 0 8px rgba(255,0,0,.85), 0 0 24px rgba(255,0,0,.45);
+      filter: drop-shadow(0 0 12px rgba(255,0,0,.25)); animation: glitch 1.2s infinite steps(2,end), shake 0.8s infinite; }
+    .sub { margin-top: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #fff; opacity: .95; font-size: clamp(10px, 2.1vw, 24px); animation: flash 0.35s infinite alternate; }
+    @keyframes flash { from { opacity: .25; filter: blur(.4px) } to { opacity: 1; filter: blur(0) } }
+    @keyframes shake { 0% { transform: translate(0,0) } 25% { transform: translate(1px,-1px) } 50% { transform: translate(-2px,1px) } 75% { transform: translate(2px,2px) } 100% { transform: translate(0,0) } }
+    @keyframes glitch { 0% { text-shadow: 2px 0 var(--neon), -2px 0 var(--violet), 0 0 16px rgba(255,0,0,.6); }
+      20% { text-shadow: -2px 0 var(--neon), 2px 0 var(--violet), 0 0 24px rgba(255,0,0,.7); }
+      40% { text-shadow: 2px 0 var(--neon), -2px 0 var(--violet), 0 0 20px rgba(255,0,0,.8); }
+      60% { text-shadow: -3px 0 var(--neon), 3px 0 var(--violet), 0 0 28px rgba(255,0,0,.9); }
+      80% { text-shadow: 3px 0 var(--neon), -3px 0 var(--violet), 0 0 22px rgba(255,0,0,1); }
+      100% { text-shadow: 2px 0 var(--neon), -2px 0 var(--violet), 0 0 16px rgba(255,0,0,.7); } }
+    .flying { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+    .fly { position: absolute; font-weight: 800; white-space: nowrap; text-transform: uppercase; letter-spacing: .15em; opacity: .85; filter: drop-shadow(0 0 6px rgba(255,0,0,.55)); animation: fly linear infinite; }
+    @keyframes fly { 0% { transform: translate3d(var(--sx), var(--sy), 0) rotate(var(--rot)); opacity: .1; }
+      50% { opacity: 1; }
+      100% { transform: translate3d(var(--ex), var(--ey), 0) rotate(calc(var(--rot) * -1)); opacity: .15; } }
+    .warnings { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+    .warn { position: absolute; padding: .45rem .7rem; border: 2px solid var(--amber); background: repeating-linear-gradient(135deg, rgba(0,0,0,.85) 0 8px, rgba(255,0,0,.25) 8px 16px);
+      color: var(--amber); font-weight: 900; font-size: clamp(10px, 2vw, 18px); text-shadow: 0 0 6px rgba(255,200,0,.5);
+      box-shadow: 0 0 18px rgba(255,180,0,.35); animation: strobe .2s steps(2,end) infinite, tilt 2.2s ease-in-out infinite; }
+    @keyframes strobe { 50% { filter: brightness(2) contrast(150%) } }
+    @keyframes tilt { 50% { transform: rotate(-2deg) scale(1.03) } }
+    .hackers { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .18; filter: grayscale(100%) contrast(140%);
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; padding: 8px; mix-blend-mode: screen; }
+    .hackers img { width: 100%; height: 100%; object-fit: cover; animation: pulse 2.5s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
+    .ticker { position: fixed; top: 0; left: 0; right: 0; z-index: 5; height: 36px; overflow: hidden; background: linear-gradient(90deg, #2b0000, #000 60%);
+      border-bottom: 1px solid rgba(255,0,0,.4); box-shadow: 0 0 12px rgba(255,0,0,.5) inset;
+      display: flex; align-items: center; gap: 16px; padding: 0 12px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    .marquee { white-space: nowrap; will-change: transform; animation: marquee 14s linear infinite; }
+    @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+    .gate { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; backdrop-filter: blur(4px); background: rgba(0,0,0,.92); }
+    .gate-card { width: 100%; height: 100%; border: 4px dashed var(--pink-pony); border-radius: 16px; padding: 24px; text-align: center;
+      background: radial-gradient(180px 180px at 50% -20%, rgba(255,105,180,.2), transparent 60%), #fff0f5; box-shadow: 0 0 40px rgba(255,105,180,.25); }
+    .gate h2 { margin: 0 0 8px; font-size: 28px; color: #ff69b4 }
+    .gate p { opacity: .85; line-height: 1.4; }
+    .gate .actions { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+    .btn { padding: 1px 20px; border-radius: 12px; border: 2px solid var(--pink-pony); font-weight: 900; text-transform: uppercase; letter-spacing: .12em;
+      background: #fff0f5; color: #ff69b4; cursor: pointer; box-shadow: 0 0 16px rgba(255,105,180,.35); }
+    .btn.secondary { border-color: #ccc; background: #f0e0f0; }
+    .note { font-size: 12px; opacity: .7; margin-top: 8px; }
+    body.safe * { animation-play-state: paused !important; }
+    body.safe .warn, body.safe .sub { opacity: .9; }
+    body.safe .scan-overlay { opacity: .04; }
+    .footerHint { position: fixed; bottom: 8px; right: 10px; z-index: 10; font-size: 12px; opacity: .6 }
+  </style>
+</head>
+<body>
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <h2>Be A Friend Pony!!🦄</h2>
+      <p style="color: var(--pink-pony);">Bermain Bersama Pony!!</p>
+      <div class="actions">
+        <img style="border-radius: 50px; box-shadow: 0px 0px 50px 1px var(--pink-pony);" src="https://img.freepik.com/free-vector/little-white-pony-with-pink-colored-hairstyle-vector-illustration_96037-413.jpg?semt=ais_hybrid&w=740&q=80" alt="">
+        <button class="btn" id="enterFlashing">Mulai Petualangan</button>
+      </div>
+    </div>
+  </div>
+  <div class="ticker" aria-hidden="true">
+    <div class="marquee" id="marquee">CRITICAL SYSTEM BREACH • TROJAN.ACTIVE • DATA EXFILTRATION • FIREWALL BYPASSED • ROOT ACCESS GRANTED • ENCRYPTING FILES • CONTACT ADMIN IMMEDIATELY • </div>
+    <div class="marquee" aria-hidden="true">CRITICAL SYSTEM BREACH • TROJAN.ACTIVE • DATA EXFILTRATION • FIREWALL BYPASSED • ROOT ACCESS GRANTED • ENCRYPTING FILES • CONTACT ADMIN IMMEDIATELY • </div>
+  </div>
+  <canvas id="matrix" aria-hidden="true"></canvas>
+  <div class="hackers" aria-hidden="true" id="hackers">
+    <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1546321670-c78fb22ec1b6?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1545987796-200677ee1011?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1457305237443-44c3d5a30b89?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1526378722484-c1d8f3f0f3f3?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop" alt="Hacker"/>
+  </div>
+  <div class="warnings" id="warnings" aria-hidden="true"></div>
+  <div class="flying" id="flying" aria-hidden="true"></div>
+  <div class="center" aria-live="polite">
+    <div>
+      <div class="headline">HAHAHAHAHAHAHAHA</div>
+      <div class="sub">SYSTEM COMPROMISED • DO NOT POWER OFF • ENCRYPTING FILES •</div>
+    </div>
+  </div>
+  <div class="scan-overlay" aria-hidden="true"></div>
+  <div class="footerHint">Press <strong>ESC</strong> to toggle Safe Mode • No audio</div>
+<script>
+  const body = document.body;
+  const gate = document.getElementById('gate');
+  const enterFlashing = document.getElementById('enterFlashing');
+
+  function goFullscreen() {
+    if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+    else if (document.documentElement.webkitRequestFullscreen) { document.documentElement.webkitRequestFullscreen(); }
+    else if (document.documentElement.msRequestFullscreen) { document.documentElement.msRequestFullscreen(); }
+  }
+
+  enterFlashing.addEventListener('click', () => { goFullscreen(); gate.remove(); start(); });
+
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') body.classList.toggle('safe'); });
+
+  function start() {
+    initMatrix();
+    spawnWarnings(200);
+    spawnFlyingText(300);
+    spawnExtraElementsForLag();
+    setTimeout(() => { window.close(); }, 10000);
+  }
+
+  function initMatrix() {
+    const c = document.getElementById('matrix');
+    const ctx = c.getContext('2d');
+    let w = c.width = window.innerWidth;
+    let h = c.height = window.innerHeight;
+    const chars = '01ABCDEFGHJKLXYZ#$%&@';
+    const fontSize = 16;
+    const columns = Math.floor(w / fontSize);
+    const drops = Array.from({ length: columns }, () => Math.random() * h / fontSize);
+    window.addEventListener('resize', () => { w = c.width = window.innerWidth; h = c.height = window.innerHeight; });
+    function draw() {
+      ctx.fillStyle = 'rgba(0,0,0,0.09)'; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#39ff14'; ctx.font = fontSize + 'px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > h && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  function spawnWarnings(count) {
+    const wrap = document.getElementById('warnings');
+    const terms = ['WARNING', 'MALWARE', 'TROJAN.ACTIVE', 'BREACH', 'ROOT ACCESS', 'FIREWALL OFF', 'CRITICAL', 'RANSOMWARE', 'PAYLOAD', 'KEYLOGGER'];
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('div'); d.className = 'warn';
+      d.style.left = Math.random() * 100 + 'vw'; d.style.top = Math.random() * 100 + 'vh';
+      d.textContent = terms[Math.floor(Math.random() * terms.length)]; wrap.appendChild(d);
+    }
+  }
+
+  function spawnFlyingText(count) {
+    const layer = document.getElementById('flying');
+    const phrases = ['SYSTEM COMPROMISED', 'DATA EXFILTRATION', 'DO NOT POWER OFF', 'DELETING LOGS', 'ADMIN OVERRIDE', 'ENCRYPTING...', 'REMOTE CONTROL', 'CMD.EXE /C', 'ACCESS GRANTED', 'BIOS LOCK', 'PAYLOAD DEPLOYED'];
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement('span'); span.className = 'fly';
+      const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+      span.textContent = phrase;
+      const size = Math.random() * 1.2 + 0.8;
+      span.style.fontSize = `${size}rem`;
+      const dur = Math.random() * 8 + 4;
+      span.style.animationDuration = `${dur}s`;
+      const sx = Math.random() * 100 + 'vw';
+      const sy = Math.random() * 100 + 'vh';
+      const ex = Math.random() * 100 + 'vw';
+      const ey = Math.random() * 100 + 'vh';
+      const rot = (Math.random() * 90 - 45) + 'deg';
+      span.style.setProperty('--sx', sx);
+      span.style.setProperty('--sy', sy);
+      span.style.setProperty('--ex', ex);
+      span.style.setProperty('--ey', ey);
+      span.style.setProperty('--rot', rot);
+      layer.appendChild(span);
+    }
+  }
+
+  function spawnExtraElementsForLag() {
+    const body = document.body;
+    const lagCount = 5000;
+    for (let i = 0; i < lagCount; i++) {
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.width = '1px';
+      div.style.height = '1px';
+      div.style.background = 'transparent';
+      div.style.left = Math.random() * 100 + 'vw';
+      div.style.top = Math.random() * 100 + 'vh';
+      div.style.animation = 'pulse 0.1s infinite';
+      body.appendChild(div);
+    }
+    const hackers = document.getElementById('hackers');
+    const cloneHackers = hackers.cloneNode(true);
+    cloneHackers.style.opacity = '0.1';
+    body.appendChild(cloneHackers);
+    spawnWarnings(500);
+    spawnFlyingText(500);
+  }
+</script>
+</body>
+</html>
